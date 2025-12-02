@@ -9,14 +9,14 @@ model = AutoModelForZeroShotObjectDetection.from_pretrained(
 ).to("cpu")
 
 # Load image
-path = r"W:\Binghamton\Semester 2\Robot Perception\Project\Implementations\Language-Aware-Robot-Manipulation\CLEVR_img.jpg"
+path = r"W:\Binghamton\Semester 2\Robot Perception\Project\Implementations\Language-Aware-Robot-Manipulation\0000.png"
 image = Image.open(path).convert("RGB")
 orig_w, orig_h = image.size
 
 # Resize
 image_resized = image.resize((640, 640))
 
-prompt = "goldene sphere, gold circle"
+prompt = "reach the red target, red sphere"
 
 # Forward pass
 inputs = processor(images=image_resized, text=prompt, return_tensors="pt")
@@ -29,7 +29,7 @@ scores = token_scores.max(dim=1).values         # [900]
 pred_boxes = outputs.pred_boxes[0]              # [900, 4]
 
 # Threshold
-THRESH = 0.1
+THRESH = 0.25
 mask = scores > THRESH
 
 filtered_boxes = pred_boxes[mask]
